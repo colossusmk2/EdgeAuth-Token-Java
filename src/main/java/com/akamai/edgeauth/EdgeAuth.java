@@ -30,7 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
+//import javax.xml.bind.DatatypeConverter;
 
 
 /**
@@ -280,7 +280,8 @@ public class EdgeAuth {
 
         try {
             Mac hmac = Mac.getInstance(this.algorithm);
-            byte[] keyBytes = DatatypeConverter.parseHexBinary(this.key);
+            //byte[] keyBytes = DatatypeConverter.parseHexBinary(this.key);
+            byte[] keyBytes = org.apache.commons.codec.binary.Hex.decodeHex(this.key.toCharArray());
             SecretKeySpec secretKey = new SecretKeySpec(keyBytes, this.algorithm);
             hmac.init(secretKey);
 
@@ -290,6 +291,9 @@ public class EdgeAuth {
         } catch (NoSuchAlgorithmException e) {
             throw new EdgeAuthException(e.toString());
         } catch (InvalidKeyException e) {
+            throw new EdgeAuthException(e.toString());
+        } catch (DecoderException e) {
+            e.printStackTrace();
             throw new EdgeAuthException(e.toString());
         }
     }
